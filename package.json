@@ -1,0 +1,28 @@
+{
+  "name": "hyconet.js",
+  "version": "0.1.0",
+  "description": "Hybridcst-Connect Javascript SDK",
+  "dependencies": {
+    "node-ssdp": "^4.0.0",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4",
+    "websocket": "^1.0.29",
+    "xmljson": "^0.2.0"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test-jest": "NODE_ENV=test jest",
+    "test": "node ./test/test-hyconet-auto.js",
+    "test-browser": "node ./test/test-server.js && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/nhkrd/hyconet.js.git"
+  },
+  "author": "ikeomasaya",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-jest": "^24.8.0",
+    "jest": "^24.8.0"
+  }
+}
