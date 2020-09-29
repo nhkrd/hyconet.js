@@ -5,7 +5,7 @@ Hybridcast-Connect Reference SDK for javascript | ハイコネリファレンス
 
 ## Overview
 
-"hyconet.js" is the javascript based reference implementation SDK of the "Hybridcast-Connect" that was standardized at Sep.2018 in IPTV Forum Japan. Hybridcast-Connect can realize to control some parts of the functions of a tuner on a TV Set from a application outside of the tuner , and communicate with text message between the TV Set and some applications.
+"hyconet.js" is the javascript based reference implementation SDK of the "Hybridcast-Connect" that was standardized in September 2018 in IPTV Forum Japan. Hybridcast-Connect makes it possible to control a TV set from an application running on the other device such as a smart phone and an IoT device. It also enables text-messaging between applications on the TV Set and the other devices.
 
 The OSS, "hyconet.js" is utilized as a part of Node-RED module in the NHK Demo Application of [W3C TPAC2019 WoTIG/WG](https://www.w3.org/WoT/IG/wiki/F2F_meeting,_16-20_September_2019,_Fukuoka,_Japan#Agenda).
 The Node-RED plugin is here. [node-red-contrib-hyconet](https://github.com/nhkrd/node-red-contrib-hyconet).
@@ -71,7 +71,7 @@ see "package.json"
 
 ## Limitation of Use (System Limitation) 
 
-In the device search process, a application with this hyconet.js library can receive UDP Multicast Datagram packets.If your environment is docker on Mac, a application in docker can not receive the UDP packets because of system limitation. 
+In the device search process, an application using hyconet.js library needs to receive UDP Multicast Datagram packets. If you use docker on Mac, an application running on docker environment cannot receive the UDP packets because of system limitation. 
 
 デバイスsearchにはSSDPを使用するため、UDP Multicast送信後のUDPパケット受信＆ハンドリングできる環境が必要.特にdockerを使った場合、Linux環境以外はUDP Multicastパケットの受信ができない.
 
@@ -90,12 +90,12 @@ APIで実現する機能の詳細については、IPTVFJ STD-0013-7章/8章を�
 
 以下の情報を保持するJSONオブジェクト
 
-  - ipaddr: 発見した受信機のIPアドレス
+  - ipaddr: 発見した受信機のIPアドレス (IP address of the discovered TV set)
   - profile: プロトコル
-  - friendlyName: 受信機のモデルなどの呼び名
-  - ApplicationURL: ハイコネプロトコルのAPI情報を取得するためのベースURL
-  - uuid: 受信機のuuid
-  - LocationURL: deviceSearch時にdeviceの基本情報を取得するためのURL
+  - friendlyName: 受信機のモデルなどの呼び名 (Model name of TV set)
+  - ApplicationURL: ハイコネプロトコルのAPI情報を取得するためのベースURL (Base URL to obtain API information of Hybridcast-Connect)
+  - uuid: 受信機のuuid (uuid for TV set)
+  - LocationURL: deviceSearch時にdeviceの基本情報を取得するためのURL (URL to obtain device information)
   - deviceType: 対応するプロトコル情報
   - manufacture: デバイスメーカー
 
@@ -119,6 +119,7 @@ DEVICEINFOオブジェクトのarray
   DEVICEINFO, DEVICEINFO, ....
 ]
 ```
+
 ### getDeviceList
 
 ### getDeviceListInfo
@@ -185,7 +186,8 @@ Specify deviceinfo object below to select target device.
 
 ### startAITControlledApp
 
-- 選局または選局->Hybridcastアプリ起動のAPI
+選局または選局->Hybridcastアプリ起動のAPI  
+API to tune to specific channel. Launching Hybridcast application is also supported.
 
 ```
 (
@@ -209,22 +211,26 @@ Specify deviceinfo object below to select target device.
 
 ### setWebsocketListener
 
-websocket通信におけるメッセージ受信処理を実装するためのAPI.Websocket接続時にCallbackFunctionがセットされる.
+websocket通信におけるメッセージ受信処理を実装するためのAPI.Websocket接続時にCallbackFunctionがセットされる.  
+API for setting callback functions for app-to-app messaging via websocket.
 
 ```
 ( WebsocketMessageReceiverCallbackFunction, SetURLMessageCallbackFunction) -> None
 ```
 
-- WebsocketMessageReceiverCallbackFunction
-  websocket通信で受信した全てのテキストメッセージを補足するCallbackFunction
+- WebsocketMessageReceiverCallbackFunction  
+  websocket通信で受信した全てのテキストメッセージを捕捉するCallbackFunction  
+  Callback function that is invoked when a message is received via websocket.
 
-- SetURLMessageCallbackFunction
-  websocket通信の中におけるsetURLフォーマットのデータを受信した時に発動するCallbackFunction
+- SetURLMessageCallbackFunction  
+  websocket通信の中におけるsetURLフォーマットのデータを受信した時に発動するCallbackFunction  
+  Callback function that is invoked when a data with a setURL format is received via websocket.
 
 
 ### connWebsocket
 
-websocket通信開始API.接続時にwebsocketメッセージ受信のためのsetWebsocketListenerで指定したcallbackが設定される.
+websocket通信開始API.接続時にwebsocketメッセージ受信のためのsetWebsocketListenerで指定したcallbackが設定される.  
+API to start connection on websocket.
 
 ```
 () -> Promise(resolve(STATUS), reject)
@@ -233,7 +239,8 @@ websocket通信開始API.接続時にwebsocketメッセージ受信のためのs
 
 ### sendWebsocket
 
-websocket接続後にTV受信機へメッセージを送信するためのAPI
+websocket接続後にTV受信機へメッセージを送信するためのAPI  
+API to send a message to TV set.
 
 ```
 ({
@@ -247,7 +254,8 @@ websocket接続後にTV受信機へメッセージを送信するためのAPI
 
 ### sendTextOverWebsocket
 
-websocket接続後にHybridcastアプリへメッセージ送信するためのAPI
+websocket接続後にHybridcastアプリへメッセージ送信するためのAPI  
+API to send a message to a Hybridcast application.
 
 ```
 ( String ) -> Promise
@@ -259,7 +267,8 @@ TBD
 
 ### requestURLOverWebsocket
 
-TV受信機がHybridcastブラウザから設定されたsetURLとその付随情報を取得するためのAPI
+TV受信機がHybridcastブラウザから設定されたsetURLとその付随情報を取得するためのAPI  
+API to obtain a URL and additional information that is set by Hybridcast browser.
 
 ```
 () -> Promise
